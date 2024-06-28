@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import CustomInput from './CustomInput';
-import { authFormSchema } from '@/lib/utils';
+import { authFormSchema, parseStringify } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
@@ -38,7 +38,7 @@ const AuthForm = ({ type }: { type: string }) => {
             resolver: zodResolver(formSchema),
             defaultValues: {
                 email: "",
-                password: ''
+                password: ""
             },
         })
         
@@ -48,33 +48,34 @@ const AuthForm = ({ type }: { type: string }) => {
 
             try {
                 // Sign up with Appwrite & create plaid token
-                console.log("onSubmit() try-catch block...");
+                console.log("AuthForm => onSubmit() try-catch block...");
 
                 if(type === 'sign-up') {
-                    console.log("onSubmit(), type: " + type + " email: " + data.email + " password: " + data.password);
+                    console.log("AuthForm => onSubmit(), type: " + type + " email: " + data.email + " password: " + data.password);
 
                     const newUser = await signUp(data);
                     setUser(newUser);
                 }
 
                 if(type === 'sign-in') {
-                    console.log("onSubmit(), type: " + type + " email: " + data.email + " password: " + data.password);
+                    console.log("AuthForm => onSubmit(), before signIn(), type: " + type + " email: " + data.email + " password: " + data.password);
 
                     const response = await signIn({
                         email: data.email,
                         password: data.password,
                     })
 
-                    console.log("onSubmit(), still 'sign-in'...");
+                    console.log("AuthForm => onSubmit(), after signIn(). response: " + response);
+                    console.log("Converting response object to a string: " + parseStringify(response));
 
                     if(response) router.push('/')
-                        else console.log('Error signing in with... '); // + data.email + ' and ' + data.password);
+                        else console.log('AuthForm => onSubmit(). Error signing in with...' + data.email + ' and ' + data.password);
                 }
             } catch (error) {
-                console.log("onSubmit(), now in 'catch' section...");
+                console.log("AuthForm => onSubmit(), 'catch' section...");
                 console.log(error);
             } finally {
-                console.log("onSubmit(), now in 'finally' section...");
+                console.log("AuthForm => onSubmit(), 'finally' section...");
                 setIsLoading(false);
             }
         }

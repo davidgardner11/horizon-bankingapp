@@ -5,16 +5,20 @@ import React from 'react'
 
 const Footer = ({ user, type = 'desktop' }: FooterProps) => {
     const router = useRouter();
+    console.log("Entering Footer()... ");
 
     const handleLogOut = async () => {
+        console.log("Footer() => handleLogOut()... ");
         const loggedOut = await logoutAccount();
 
         if(loggedOut) {
+            console.log("Footer() => handleLogOut(), loggedOut = True ");
             router.push('/sign-in');
-            console.log('Logged out successfully. ');
+            console.log('Footer() => handleLogOut. Logged out successfully. ');
         }
         else
-            console.log('Error logging out. ');
+            console.log("Footer() => handleLogOut(), loggedOut = False ");
+            console.log('Footer() => handleLogOut(). Error logging out. ');
     }
             
     return (
